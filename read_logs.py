@@ -1,9 +1,9 @@
 import sys
 import json
+import os
 
 
-def process(filename):
-    provider = filename.split('_')[0]
+def process(filename, provider):
     f = open(filename)
     out = []
     for line in f.readlines():
@@ -50,11 +50,12 @@ def extract_prob_size(args):
 
 
 if __name__ == '__main__':
-    results = []
-    for i in sys.argv[1:]:
-        results += process(sys.argv[1])
+    results = {}
+    for inp in sys.argv[1:]:
+        provider = os.path.basename(inp).split('_')[0]
+        print provider
+        results[provider] = process(inp, provider)
 
-    print results[0].keys()
-    for r in results:
-        print r['score'], r['duration']
-        # print r['fun_size'], r['score']
+    for p in results.keys():
+        for r in results[p]:
+            print r['score'], r['duration']
