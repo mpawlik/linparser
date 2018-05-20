@@ -35,7 +35,7 @@ def extract_performance(output):
 
 
 def extract_fun_size(url):
-    suffix= url[-6:]
+    suffix = url[-6:]
     split_char = '-'
     if '_' in suffix:
         split_char = '_'
@@ -49,13 +49,17 @@ def extract_prob_size(args):
     return size
 
 
-if __name__ == '__main__':
-    results = {}
-    for inp in sys.argv[1:]:
+def read_files(files):
+    read_results = {}
+    for inp in files:
         provider = os.path.basename(inp).split('_')[0]
-        print provider
-        results[provider] = process(inp, provider)
+        read_results[provider] = process(inp, provider)
 
+    return read_results
+
+
+if __name__ == '__main__':
+    results = read_files(sys.argv[1:])
     for p in results.keys():
         for r in results[p]:
             print r['score'], r['duration']
