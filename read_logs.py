@@ -77,6 +77,13 @@ def convert_to_list(results, key):
 
     return output
 
+def convert_to_list_difference(results, key1, key2):
+    output = []
+    for r in results:
+        output += [r[key1] - r[key2]]
+
+    return output
+
 
 if __name__ == '__main__':
     results = read_files(sys.argv[1:])
