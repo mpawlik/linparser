@@ -58,6 +58,26 @@ def read_files(files):
     return read_results
 
 
+def section_on_property(results, key):
+    output = {}
+    for r in results:
+        value = r[key]
+        if value in output.keys():
+            output[value] += [r]
+        else:
+            output[value] = [r]
+
+    return output
+
+
+def convert_to_list(results, key):
+    output = []
+    for r in results:
+        output += [r[key]]
+
+    return output
+
+
 if __name__ == '__main__':
     results = read_files(sys.argv[1:])
     for p in results.keys():
