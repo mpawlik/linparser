@@ -3,10 +3,15 @@ import json
 
 
 def process(filename):
+    provider = filename.split('_')[0]
     f = open(filename)
     out = []
     for line in f.readlines():
         if line.startswith("#DATA"):
+            if 'html' in line or 'Response not yet ready' in line:
+                print "server error"
+                print line
+                continue
             data = json.loads(line[6:])
             if 'message' in data.keys():
                 print "Message: %s" % data['message']
@@ -15,6 +20,7 @@ def process(filename):
             data['score'] = extract_performance(data['stdout'])
             data['fun_size'] = extract_fun_size(data['executor_url'])
             data['prob_size'] = extract_prob_size(data['args'])
+            data['provider'] = provider
             out += [data]
     return out
 
@@ -44,7 +50,11 @@ def extract_prob_size(args):
 
 
 if __name__ == '__main__':
-    results = process(sys.argv[1])
+    results = []
+    for i in sys.argv[1:]:
+        results += process(sys.argv[1])
+
     print results[0].keys()
     for r in results:
-        print r['fun_size']
+        print r['score'], r['duration']
+        # print r['fun_size'], r['score']
