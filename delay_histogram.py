@@ -15,7 +15,7 @@ providers = ['aws', 'gcf', 'ibm']
 
 def set_hist_params(ax):
     ax.grid(alpha=0.3)
-    ax.set_ylim(0, 1000)
+    ax.set_ylim(0, 900)
     ax.set_xlim(0, 100)
     ax.xaxis.set_ticks(np.arange(0, 100, 30))
     ax.yaxis.set_ticks(np.arange(0, 1000, 200))
@@ -43,7 +43,7 @@ if __name__ == '__main__':
 
     bins = np.linspace(0, 100, 50)
 
-    fig = plt.figure(figsize=(10, 5))
+    fig = plt.figure(figsize=(15, 5))
 
     outer = gridspec.GridSpec(1, 3, wspace=0.5, hspace=0.3)
 

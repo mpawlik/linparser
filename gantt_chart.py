@@ -65,7 +65,7 @@ if __name__ == '__main__':
 
     fig = plt.figure(figsize=(10, 5))
 
-    gs = gridspec.GridSpec(1, 3, wspace=0.2)
+    gs = gridspec.GridSpec(1, 3, wspace=0.5)
 
     ax = plt.subplot(gs[0])
     aws_count = len(aws_start)
