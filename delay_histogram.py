@@ -19,7 +19,7 @@ def set_hist_params(ax):
     ax.set_xlim(0, 100)
     ax.xaxis.set_ticks(np.arange(0, 100, 30))
     ax.yaxis.set_ticks(np.arange(0, 1000, 200))
-    ax.set_xlabel("Time")
+    ax.set_xlabel("Time [s]")
     ax.set_ylabel("count")
 
 

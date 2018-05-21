@@ -27,8 +27,8 @@ def set_scatter_params(ax):
     ax.xaxis.set_ticks([0, 512, 1024, 1536, 2048])
     ax.yaxis.set_ticks(np.arange(0, 45, 5))
     ax.grid(alpha=0.3)
-    ax.set_xlabel("Memory size")
-    ax.set_ylabel("GFlops")
+    ax.set_xlabel("Memory size [MB]")
+    ax.set_ylabel("Performance [GFlops]")
 
 
 if __name__ == '__main__':
@@ -62,7 +62,7 @@ if __name__ == '__main__':
 
     fig = plt.figure(figsize=(10, 5))
 
-    outer = gridspec.GridSpec(2, 3, wspace=0.5, hspace=0.3)
+    outer = gridspec.GridSpec(2, 3, wspace=0.4, hspace=0.3)
 
     # Scatter >>>>>>>>>>>>>>
 
@@ -83,7 +83,8 @@ if __name__ == '__main__':
         [256] * len(gcf_mem_256) + [512] * len(gcf_mem_512) + [1024] * len(gcf_mem_1024) + [2048] * len(gcf_mem_2048),
         gcf_mem_256 + gcf_mem_512 + gcf_mem_1024 + gcf_mem_2048,
         alpha=0.1,
-        c=["C0"] * len(gcf_mem_256) + ["C1"] * len(gcf_mem_512) + ["C2"] * len(gcf_mem_1024) + ["C4"] * len(gcf_mem_2048)
+        c=["C0"] * len(gcf_mem_256) + ["C1"] * len(gcf_mem_512) + ["C2"] * len(gcf_mem_1024) + ["C4"] * len(
+            gcf_mem_2048)
     )
     ax.set_title("GCF")
     set_scatter_params(ax)
@@ -124,7 +125,7 @@ if __name__ == '__main__':
     ax4 = plt.subplot(gs_aws_l[4])
     ax4.hist(aws_mem_2048, bins, alpha=0.5, edgecolor='k', label='2048', color='C4')
     set_hist_params(ax4)
-    ax4.set_xlabel("GFlops")
+    ax4.set_xlabel("Performance [GFlops]")
 
     # GCF
 
@@ -146,7 +147,7 @@ if __name__ == '__main__':
     ax4 = plt.subplot(gs_gcf_l[4])
     ax4.hist(gcf_mem_2048, bins, alpha=0.5, edgecolor='k', label='2048', color='C4')
     set_hist_params(ax4)
-    ax4.set_xlabel("GFlops")
+    ax4.set_xlabel("Performance [GFlops]")
 
     gs_ibm_l = gridspec.GridSpecFromSubplotSpec(5, 1, subplot_spec=outer[5], hspace=.0)
 
@@ -158,7 +159,7 @@ if __name__ == '__main__':
     ax1 = plt.subplot(gs_ibm_l[1])
     ax1.hist(ibm_mem_256, bins, alpha=0.5, edgecolor='k', label='512', color='C1')
     set_hist_params(ax1)
-    ax1.set_xlabel("GFlops")
+    ax1.set_xlabel("Performance [GFlops]")
 
     # plt.subplots_adjust(hspace=.0)
     plt.show()
