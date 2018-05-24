@@ -14,11 +14,12 @@ providers = ['aws', 'gcf', 'ibm']
 
 
 def set_hist_params(ax):
+    ax.set_yscale('log')
     ax.grid(alpha=0.3)
-    ax.set_ylim(0, 900)
+    ax.set_ylim(0, 1000)
     ax.set_xlim(0, 100)
     ax.xaxis.set_ticks(np.arange(0, 100, 30))
-    ax.yaxis.set_ticks(np.arange(0, 1000, 200))
+    # ax.yaxis.set_ticks(np.arange(0, 1000, 200))
     ax.set_xlabel("Time [s]")
     ax.set_ylabel("count")
 
@@ -43,7 +44,7 @@ if __name__ == '__main__':
 
     bins = np.linspace(0, 100, 50)
 
-    fig = plt.figure(figsize=(15, 5))
+    fig = plt.figure(figsize=(15, 2))
 
     outer = gridspec.GridSpec(1, 3, wspace=0.5, hspace=0.3)
 
@@ -77,6 +78,8 @@ if __name__ == '__main__':
     # set_hist_params(ax0)
     # ax0.set_ylabel("count")
 
+    plt.gcf().subplots_adjust(bottom=0.25)
+    plt.savefig('delay.png', dpi=300)
     plt.show()
 
     # fig, axes = plt.subplots(nrows=1, ncols=3)
@@ -87,5 +90,5 @@ if __name__ == '__main__':
     # ax0.set_title('AWS')
     # ax0.legend(loc='upper right')
     #
-    # fig.tight_layout()
+
     # plt.show()

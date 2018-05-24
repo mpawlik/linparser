@@ -16,7 +16,7 @@ providers = ['aws', 'gcf', 'ibm']
 def set_hist_params(ax):
     ax.grid(alpha=0.3)
     ax.set_ylim(0, 600)
-    ax.legend(loc='upper right')
+    ax.legend(loc='upper right', fontsize='x-small', )
     ax.xaxis.set_ticks(np.arange(0, 55, 5))
     ax.yaxis.set_ticks(np.arange(0, 600, 200))
 
@@ -60,7 +60,7 @@ if __name__ == '__main__':
 
     bins = np.linspace(0, 50, 100)
 
-    fig = plt.figure(figsize=(10, 5))
+    fig = plt.figure(figsize=(14, 5))
 
     outer = gridspec.GridSpec(2, 3, wspace=0.4, hspace=0.3)
 
@@ -162,6 +162,8 @@ if __name__ == '__main__':
     ax1.set_xlabel("Performance [GFlops]")
 
     # plt.subplots_adjust(hspace=.0)
+    fig.subplots_adjust(top=0.95)
+    plt.savefig('score.png', dpi=300)
     plt.show()
 
     # fig, axes = plt.subplots(nrows=1, ncols=3)

@@ -85,4 +85,5 @@ if __name__ == '__main__':
     set_params(ax)
     ax.set_title("IBM")
 
+    plt.savefig('gantt.png', dpi=300)
     plt.show()
