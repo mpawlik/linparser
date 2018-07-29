@@ -2,7 +2,7 @@ import sys
 import json
 import os
 
-import numpy as np
+from numpy import average, arange, linspace, std
 import matplotlib.pyplot as plt
 from matplotlib import gridspec, ticker
 
@@ -14,18 +14,22 @@ providers = ['aws', 'gcf', 'ibm']
 
 
 def set_hist_params(ax):
+    ax.set_yscale('log')
     ax.grid(alpha=0.3)
-    ax.set_ylim(0, 600)
+    ax.set_ylim(1, 10000)
+    ax.set_xlim(0, 55)
     ax.legend(loc='upper right', fontsize='x-small', )
-    ax.xaxis.set_ticks(np.arange(0, 55, 5))
-    ax.yaxis.set_ticks(np.arange(0, 600, 200))
+    ax.xaxis.set_ticks(arange(5, 55, 5))
+    ax.yaxis.set_ticks([1, 100, 1000])
+    ax.yaxis.set_major_formatter(ticker.ScalarFormatter())
+    ax.tick_params(axis='y', labelsize='small')
 
 
 def set_scatter_params(ax):
     ax.set_ylim(0, 45)
-    ax.set_xlim(0, 3100)
-    ax.xaxis.set_ticks([0, 512, 1024, 1536, 2048, 3072])
-    ax.yaxis.set_ticks(np.arange(0, 45, 5))
+    ax.set_xlim(0, 3200)
+    ax.xaxis.set_ticks([0, 512, 1024, 1536, 2048, 3008])
+    ax.yaxis.set_ticks(arange(0, 45, 5))
     ax.grid(alpha=0.3)
     ax.set_xlabel("Memory size [MB]")
     ax.set_ylabel("Performance [GFlops]")
@@ -46,8 +50,6 @@ if __name__ == '__main__':
     aws_mem_2048 = convert_to_list(aws_mem[2048], 'score')
     aws_mem_3008 = convert_to_list(aws_mem[3008], 'score')
 
-    print "max_aws:", max(aws_mem_256 + aws_mem_512 + aws_mem_1024 + aws_mem_1536 + aws_mem_2048 + aws_mem_3008)
-
     gcf_mem = section_on_property(results['gcf'], 'fun_size')
 
     gcf_mem_256 = convert_to_list(gcf_mem[256], 'score')
@@ -55,16 +57,46 @@ if __name__ == '__main__':
     gcf_mem_1024 = convert_to_list(gcf_mem[1024], 'score')
     gcf_mem_2048 = convert_to_list(gcf_mem[2048], 'score')
 
-    print "max_gcf:", max(gcf_mem_256 + gcf_mem_512 + gcf_mem_1024 + gcf_mem_2048)
-
     ibm_mem = section_on_property(results['ibm'], 'fun_size')
 
     ibm_mem_256 = convert_to_list(ibm_mem[256], 'score')
     ibm_mem_512 = convert_to_list(ibm_mem[512], 'score')
 
-    print "max_ibm:", max(ibm_mem_256 + ibm_mem_512)
+    # STATS
 
-    bins = np.linspace(0, 50, 100)
+    # AVG
+    print "aws_avg256: ", average(aws_mem_256)
+    print "aws_avg512: ", average(aws_mem_512)
+    print "aws_avg1024: ", average(aws_mem_1024)
+    print "aws_avg1536: ", average(aws_mem_1536)
+    print "aws_avg2048: ", average(aws_mem_2048)
+    print "aws_avg3008: ", average(aws_mem_3008)
+
+    print "gcf_avg256: ", average(gcf_mem_256)
+    print "gcf_avg512: ", average(gcf_mem_512)
+    print "gcf_avg1024: ", average(gcf_mem_1024)
+    print "gcf_avg2048: ", average(gcf_mem_2048)
+
+    print "ibm_avg256: ", average(ibm_mem_256)
+    print "ibm_avg512: ", average(ibm_mem_512)
+
+    # STD
+    print "aws_std256: ", std(aws_mem_256)
+    print "aws_std512: ", std(aws_mem_512)
+    print "aws_std1024: ", std(aws_mem_1024)
+    print "aws_std1536: ", std(aws_mem_1536)
+    print "aws_std2048: ", std(aws_mem_2048)
+    print "aws_std3008: ", std(aws_mem_3008)
+
+    print "gcf_std256: ", std(gcf_mem_256)
+    print "gcf_std512: ", std(gcf_mem_512)
+    print "gcf_std1024: ", std(gcf_mem_1024)
+    print "gcf_std2048: ", std(gcf_mem_2048)
+
+    print "ibm_std256: ", std(ibm_mem_256)
+    print "ibm_std512: ", std(ibm_mem_512)
+
+    bins = linspace(0, 50, 100)
 
     fig = plt.figure(figsize=(14, 7))
 
@@ -115,11 +147,11 @@ if __name__ == '__main__':
     ax0 = plt.subplot(gs_aws_l[0])
     ax0.hist(aws_mem_256, bins, alpha=0.5, edgecolor='k', label='256', color='C0')
     set_hist_params(ax0)
-    ax0.set_ylabel("count")
 
     ax1 = plt.subplot(gs_aws_l[1])
     ax1.hist(aws_mem_512, bins, alpha=0.5, edgecolor='k', label='512', color='C1')
     set_hist_params(ax1)
+    ax1.set_ylabel("count, log scale")
 
     ax2 = plt.subplot(gs_aws_l[2])
     ax2.hist(aws_mem_1024, bins, alpha=0.5, edgecolor='k', label='1024', color='C2')
@@ -134,8 +166,9 @@ if __name__ == '__main__':
     set_hist_params(ax4)
 
     ax5 = plt.subplot(gs_aws_l[5])
-    ax5.hist(aws_mem_3008, bins, alpha=0.5, edgecolor='k', label='2048', color='C5')
+    ax5.hist(aws_mem_3008, bins, alpha=0.5, edgecolor='k', label='3008', color='C5')
     set_hist_params(ax5)
+    ax5.xaxis.set_ticks(arange(0, 55, 5))
     ax5.set_xlabel("Performance [GFlops]")
 
     # GCF
@@ -145,11 +178,11 @@ if __name__ == '__main__':
     ax0 = plt.subplot(gs_gcf_l[0])
     ax0.hist(gcf_mem_256, bins, alpha=0.5, edgecolor='k', label='256', color='C0')
     set_hist_params(ax0)
-    ax0.set_ylabel("count")
 
     ax1 = plt.subplot(gs_gcf_l[1])
     ax1.hist(gcf_mem_512, bins, alpha=0.5, edgecolor='k', label='512', color='C1')
     set_hist_params(ax1)
+    ax1.set_ylabel("count, log scale")
 
     ax2 = plt.subplot(gs_gcf_l[2])
     ax2.hist(gcf_mem_1024, bins, alpha=0.5, edgecolor='k', label='1024', color='C2')
@@ -158,19 +191,23 @@ if __name__ == '__main__':
     ax4 = plt.subplot(gs_gcf_l[4])
     ax4.hist(gcf_mem_2048, bins, alpha=0.5, edgecolor='k', label='2048', color='C4')
     set_hist_params(ax4)
+    ax4.xaxis.set_ticks(arange(0, 55, 5))
     ax4.set_xlabel("Performance [GFlops]")
+
+    # IBM
 
     gs_ibm_l = gridspec.GridSpecFromSubplotSpec(6, 1, subplot_spec=outer[5], hspace=.0)
 
     ax0 = plt.subplot(gs_ibm_l[0])
     ax0.hist(ibm_mem_256, bins, alpha=0.5, edgecolor='k', label='256', color='C0')
     set_hist_params(ax0)
-    ax0.set_ylabel("count")
 
     ax1 = plt.subplot(gs_ibm_l[1])
     ax1.hist(ibm_mem_256, bins, alpha=0.5, edgecolor='k', label='512', color='C1')
     set_hist_params(ax1)
+    ax1.xaxis.set_ticks(arange(0, 55, 5))
     ax1.set_xlabel("Performance [GFlops]")
+    ax1.set_ylabel("count, log scale")
 
     # plt.subplots_adjust(hspace=.0)
     fig.subplots_adjust(top=0.95)
@@ -180,7 +217,7 @@ if __name__ == '__main__':
     # fig, axes = plt.subplots(nrows=1, ncols=3)
     # ax0, ax1, ax2 = axes
     #
-    # bins = np.linspace(0, 100, 40)
+    # bins = linspace(0, 100, 40)
     # ax0.hist(aws_mem_256, bins, alpha=0.5, edgecolor='k', label='256')
     # ax0.set_title('AWS')
     # ax0.legend(loc='upper right')
