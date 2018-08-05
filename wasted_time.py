@@ -35,6 +35,8 @@ if __name__ == '__main__':
 
     threshold = 5000
 
+#TODO SPRAWDZIC INNE KONFIGURACJE, SA CIEKAWE, AWS MALY
+
     #AWS
     aws_mem = section_on_property(results['aws'], 'fun_size')
     aws512 = sorted(aws_mem[512], key=lambda x: x['start'])[:threshold]
