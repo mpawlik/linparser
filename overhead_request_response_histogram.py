@@ -8,83 +8,102 @@ from matplotlib import gridspec, ticker
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from linparser.read_logs import read_files, section_on_property, convert_to_list, convert_to_list_difference
-
-providers = ['aws', 'gcf', 'ibm']
+from linparser.read_logs import read_files, section_on_property, convert_to_list, convert_to_list_difference, \
+    print_stats
 
 
 def set_hist_params(ax):
     ax.set_yscale('log')
     ax.grid(alpha=0.3)
-    ax.set_ylim(1, 1000)
-    ax.set_xlim(0, 1500)
-    ax.xaxis.set_ticks(arange(0, 1500, 250))
-    # ax.yaxis.set_ticks(arange(0, 1000, 200))
+    ax.set_ylim(1, 1500)
+    ax.set_xlim(0, 1750)
+    ax.xaxis.set_ticks(arange(250, 1750, 250))
+    ax.yaxis.set_ticks([1, 10, 100])
+    ax.minorticks_off()
+    ax.yaxis.set_major_formatter(ticker.ScalarFormatter())
+    ax.legend(loc='upper right', fontsize='x-small', )
+
+
+def bottom_hist(ax):
+    ax.xaxis.set_ticks(arange(0, 2000, 250))
     ax.set_xlabel("Time [ms]")
-    ax.set_ylabel("count")
 
 
-def print_stats(prov, data):
-    print "max(%s): %f" % (prov, max(data))
-    print "avg(%s): %f" % (prov, average(data))
-    print "std(%s): %f" % (prov, std(data))
+def histo(master_grid, place, key, data, bins):
+    ax = plt.subplot(master_grid[place])
+    ax.hist(data[key], bins, alpha=0.5, edgecolor='k', label='%d' % key, color='C%d' % place)
+    set_hist_params(ax)
+    return ax
 
 
 if __name__ == '__main__':
     results = read_files(sys.argv[1:])
-    # for p in results.keys():
-    #     for r in results[p]:
-    #         print r['score'], r['duration']
 
     threshold = 1000
 
+    fig = plt.figure(figsize=(14, 5))
+    outer = gridspec.GridSpec(1, 3, wspace=0.4, hspace=0.3)
+
     # AWS
     aws_mem = section_on_property(results['aws'], 'fun_size')
-    aws512 = sorted(aws_mem[512], key=lambda x: x['start'])[:threshold]
+    aws_over = {}
+    for mem in aws_mem.keys():
+        tmp = sorted(aws_mem[mem], key=lambda x: x['start'])[:threshold]
+        aws_over[mem] = convert_to_list_difference(tmp, 'request_end', 'end')
 
-    aws_del = convert_to_list_difference(aws512, 'request_end', 'end')
-
-    print_stats('aws', aws_del)
+    for i in aws_over.keys():
+        print_stats('aws%d' % i, aws_over[i])
 
     # GCF
     gcf_mem = section_on_property(results['gcf'], 'fun_size')
-    gcf512 = sorted(gcf_mem[512], key=lambda x: x['start'])[:threshold]
+    gcf_over = {}
+    for mem in gcf_mem.keys():
+        tmp = sorted(gcf_mem[mem], key=lambda x: x['start'])[:threshold]
+        gcf_over[mem] = convert_to_list_difference(tmp, 'request_end', 'end')
 
-    gcf_del = convert_to_list_difference(gcf512, 'request_end', 'end')
-    print_stats('gcf', gcf_del)
+    for i in gcf_over.keys():
+        print_stats('gcf%d' % i, gcf_over[i])
 
     # IBM
     ibm_mem = section_on_property(results['ibm'], 'fun_size')
-    ibm512 = sorted(ibm_mem[512], key=lambda x: x['start'])[:threshold]
+    ibm_over = {}
+    for mem in ibm_mem.keys():
+        tmp = sorted(ibm_mem[mem], key=lambda x: x['start'])[:threshold]
+        ibm_over[mem] = convert_to_list_difference(tmp, 'request_end', 'end')
 
-    ibm_del = convert_to_list_difference(ibm512, 'request_end', 'end')
-    print_stats('ibm', ibm_del)
+    for i in ibm_over.keys():
+        print_stats('ibm%d' % i, ibm_over[i])
 
     bins = linspace(0, 1500, 50)
 
-    fig = plt.figure(figsize=(15, 4))
+    aws_c = gridspec.GridSpecFromSubplotSpec(6, 1, subplot_spec=outer[0], hspace=.0)
+    gcf_c = gridspec.GridSpecFromSubplotSpec(6, 1, subplot_spec=outer[1], hspace=.0)
+    ibm_c = gridspec.GridSpecFromSubplotSpec(6, 1, subplot_spec=outer[2], hspace=.0)
 
-    outer = gridspec.GridSpec(1, 3, wspace=0.5, hspace=0.3)
-
-    # aws_del = [i / 1000. for i in aws_del]
-    # gcf_del = [i / 1000. for i in gcf_del]
-    # ibm_del = [i / 1000. for i in ibm_del]
-
-    ax = plt.subplot(outer[0])
-    ax.hist(aws_del, bins, alpha=0.5, edgecolor='k', label='delay', color='C0')
-    set_hist_params(ax)
+    ax = histo(aws_c, 0, 256, aws_over, bins)
     ax.set_title("AWS")
+    ax = histo(aws_c, 1, 512, aws_over, bins)
+    ax.set_ylabel("Count, log")
+    ax = histo(aws_c, 2, 1024, aws_over, bins)
+    ax = histo(aws_c, 3, 1536, aws_over, bins)
+    ax = histo(aws_c, 4, 2048, aws_over, bins)
+    ax = histo(aws_c, 5, 3008, aws_over, bins)
+    bottom_hist(ax)
 
-    ax = plt.subplot(outer[1])
-    ax.hist(gcf_del, bins, alpha=0.5, edgecolor='k', label='delay', color='C1')
-    set_hist_params(ax)
+    ax = histo(gcf_c, 0, 256, gcf_over, bins)
     ax.set_title("GCF")
+    ax = histo(gcf_c, 1, 512, gcf_over, bins)
+    ax.set_ylabel("Count, log")
+    ax = histo(gcf_c, 2, 1024, gcf_over, bins)
+    bottom_hist(ax)
+    ax = histo(gcf_c, 4, 2048, gcf_over, bins)
+    bottom_hist(ax)
 
-    ax = plt.subplot(outer[2])
-    ax.hist(ibm_del, bins, alpha=0.5, edgecolor='k', label='delay', color='C2')
-    set_hist_params(ax)
+    ax = histo(ibm_c, 0, 256, ibm_over, bins)
     ax.set_title("IBM")
+    ax = histo(ibm_c, 1, 512, ibm_over, bins)
+    ax.set_ylabel("Count, log")
+    bottom_hist(ax)
 
-    plt.gcf().subplots_adjust(bottom=0.25)
     plt.savefig('overhead.png', dpi=300)
     plt.show()
