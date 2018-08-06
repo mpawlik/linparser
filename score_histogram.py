@@ -21,6 +21,7 @@ def set_hist_params(ax):
     ax.legend(loc='upper right', fontsize='x-small', )
     ax.xaxis.set_ticks(arange(5, 55, 5))
     ax.yaxis.set_ticks([1, 100, 1000])
+    ax.minorticks_off()
     ax.yaxis.set_major_formatter(ticker.ScalarFormatter())
     ax.tick_params(axis='y', labelsize='small')
 
@@ -100,7 +101,7 @@ if __name__ == '__main__':
 
     fig = plt.figure(figsize=(14, 7))
 
-    outer = gridspec.GridSpec(2, 3, wspace=0.4, hspace=0.3, height_ratios=[1, 1.5])
+    outer = gridspec.GridSpec(2, 3, wspace=0.4, hspace=0.3, height_ratios=[1, 1.6])
 
     # Scatter >>>>>>>>>>>>>>
 
@@ -151,7 +152,7 @@ if __name__ == '__main__':
     ax1 = plt.subplot(gs_aws_l[1])
     ax1.hist(aws_mem_512, bins, alpha=0.5, edgecolor='k', label='512', color='C1')
     set_hist_params(ax1)
-    ax1.set_ylabel("count, log scale")
+    ax1.set_ylabel("count, log")
 
     ax2 = plt.subplot(gs_aws_l[2])
     ax2.hist(aws_mem_1024, bins, alpha=0.5, edgecolor='k', label='1024', color='C2')
@@ -182,7 +183,7 @@ if __name__ == '__main__':
     ax1 = plt.subplot(gs_gcf_l[1])
     ax1.hist(gcf_mem_512, bins, alpha=0.5, edgecolor='k', label='512', color='C1')
     set_hist_params(ax1)
-    ax1.set_ylabel("count, log scale")
+    ax1.set_ylabel("count, log")
 
     ax2 = plt.subplot(gs_gcf_l[2])
     ax2.hist(gcf_mem_1024, bins, alpha=0.5, edgecolor='k', label='1024', color='C2')
@@ -207,7 +208,7 @@ if __name__ == '__main__':
     set_hist_params(ax1)
     ax1.xaxis.set_ticks(arange(0, 55, 5))
     ax1.set_xlabel("Performance [GFlops]")
-    ax1.set_ylabel("count, log scale")
+    ax1.set_ylabel("count, log")
 
     # plt.subplots_adjust(hspace=.0)
     fig.subplots_adjust(top=0.95)
