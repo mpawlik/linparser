@@ -50,6 +50,10 @@ def extract_prob_size(args):
     return size
 
 
+def div1k(data):
+    return [i / 1000. for i in data]
+
+
 def read_files(files):
     read_results = {}
     for inp in files:

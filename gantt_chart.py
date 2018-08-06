@@ -123,8 +123,8 @@ if __name__ == '__main__':
     # set_params(ax)
     # ax.set_title("IBM")
 
-    # plt.gcf().subplots_adjust(bottom=0.25)
+    plt.gcf().subplots_adjust(right=0.95, left=0.07, top=0.95, bottom=0.7)
     # plt.gcf().subplots_adjust(top=0.25)
-    plt.savefig('gantt.png', dpi=300)
-    plt.savefig('gantt.pdf')
+    # plt.savefig('gantt.png', dpi=300)
+    # plt.savefig('gantt.pdf')
     plt.show()

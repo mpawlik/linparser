@@ -110,5 +110,7 @@ if __name__ == '__main__':
     ax.set_ylabel("Count, log")
     bottom_hist(ax)
 
+    plt.gcf().subplots_adjust(right=0.95, left=0.07, top=0.9, bottom=0.13)
     plt.savefig('overhead.png', dpi=300)
-    plt.show()
+    plt.savefig('overhead.pdf')
+    # plt.show()

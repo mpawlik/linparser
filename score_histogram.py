@@ -194,17 +194,7 @@ if __name__ == '__main__':
     ax1.set_ylabel("Count, log")
 
     # plt.subplots_adjust(hspace=.0)
-    fig.subplots_adjust(top=0.95)
+    plt.gcf().subplots_adjust(right=0.95, left=0.07, top=0.95, bottom=0.13)
     plt.savefig('score.png', dpi=300)
-    plt.show()
-
-    # fig, axes = plt.subplots(nrows=1, ncols=3)
-    # ax0, ax1, ax2 = axes
-    #
-    # bins = linspace(0, 100, 40)
-    # ax0.hist(aws_mem_256, bins, alpha=0.5, edgecolor='k', label='256')
-    # ax0.set_title('AWS')
-    # ax0.legend(loc='upper right')
-    #
-    # fig.tight_layout()
+    plt.savefig('score.pdf')
     # plt.show()

@@ -106,5 +106,7 @@ if __name__ == '__main__':
     ax.set_ylabel("Count")
     bottom_hist(ax)
 
+    plt.gcf().subplots_adjust(right=0.95, left=0.07, top=0.9, bottom=0.13)
     plt.savefig('wasted_time.png', dpi=300)
-    plt.show()
+    plt.savefig('wasted_time.pdf')
+    # plt.show()

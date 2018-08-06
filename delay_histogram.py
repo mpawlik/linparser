@@ -9,7 +9,7 @@ from matplotlib import gridspec, ticker
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from linparser.read_logs import read_files, section_on_property, convert_to_list, convert_to_list_difference, \
-    print_stats
+    print_stats, div1k
 
 providers = ['aws', 'gcf', 'ibm']
 
@@ -24,11 +24,6 @@ def set_hist_params(ax):
     ax.yaxis.set_ticks([1, 100, 1000])
     ax.yaxis.set_major_formatter(ticker.ScalarFormatter())
     ax.legend(loc='upper right', fontsize='x-small', )
-
-def div1k(data):
-    tmp = [i / 1000. for i in data]
-    data = tmp
-    return data
 
 
 if __name__ == '__main__':
@@ -156,6 +151,7 @@ if __name__ == '__main__':
     ax.set_xlabel("Time [s]")
     ax.xaxis.set_ticks(np.arange(0, 300, 50))
 
-    # plt.gcf().subplots_adjust(bottom=0.25)
+    plt.gcf().subplots_adjust(right=0.95, left=0.07, top=0.9, bottom=0.13)
     plt.savefig('delay.png', dpi=300)
-    plt.show()
+    plt.savefig('delay.pdf')
+    # plt.show()
