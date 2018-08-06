@@ -58,6 +58,7 @@ def read_files(files):
 
     return read_results
 
+
 def section_on_property(results, key):
     output = {}
     for r in results:
@@ -69,10 +70,12 @@ def section_on_property(results, key):
 
     return output
 
+
 def print_stats(prov, data):
     print "max(%s): %f" % (prov, max(data))
     print "avg(%s): %f" % (prov, average(data))
     print "std(%s): %f" % (prov, std(data))
+
 
 def convert_to_list(results, key):
     output = []
@@ -80,6 +83,7 @@ def convert_to_list(results, key):
         output += [r[key]]
 
     return output
+
 
 def convert_to_list_difference(results, key1, key2):
     output = []

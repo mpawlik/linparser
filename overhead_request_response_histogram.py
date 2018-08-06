@@ -23,10 +23,12 @@ def set_hist_params(ax):
     ax.set_xlabel("Time [ms]")
     ax.set_ylabel("count")
 
+
 def print_stats(prov, data):
     print "max(%s): %f" % (prov, max(data))
     print "avg(%s): %f" % (prov, average(data))
     print "std(%s): %f" % (prov, std(data))
+
 
 if __name__ == '__main__':
     results = read_files(sys.argv[1:])
@@ -36,7 +38,7 @@ if __name__ == '__main__':
 
     threshold = 1000
 
-    #AWS
+    # AWS
     aws_mem = section_on_property(results['aws'], 'fun_size')
     aws512 = sorted(aws_mem[512], key=lambda x: x['start'])[:threshold]
 
@@ -44,14 +46,14 @@ if __name__ == '__main__':
 
     print_stats('aws', aws_del)
 
-    #GCF
+    # GCF
     gcf_mem = section_on_property(results['gcf'], 'fun_size')
     gcf512 = sorted(gcf_mem[512], key=lambda x: x['start'])[:threshold]
 
     gcf_del = convert_to_list_difference(gcf512, 'request_end', 'end')
     print_stats('gcf', gcf_del)
 
-    #IBM
+    # IBM
     ibm_mem = section_on_property(results['ibm'], 'fun_size')
     ibm512 = sorted(ibm_mem[512], key=lambda x: x['start'])[:threshold]
 

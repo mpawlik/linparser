@@ -8,7 +8,8 @@ from matplotlib import gridspec, ticker
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from linparser.read_logs import read_files, section_on_property, convert_to_list, convert_to_list_difference, print_stats
+from linparser.read_logs import read_files, section_on_property, convert_to_list, convert_to_list_difference, \
+    print_stats
 
 providers = ['aws', 'gcf', 'ibm']
 
@@ -25,7 +26,8 @@ def set_hist_params(ax):
 
 
 def divi(vals):
-    return map(lambda x: x%100, vals)
+    return map(lambda x: x % 100, vals)
+
 
 if __name__ == '__main__':
     results = read_files(sys.argv[1:])
@@ -35,9 +37,9 @@ if __name__ == '__main__':
 
     threshold = 5000
 
-#TODO SPRAWDZIC INNE KONFIGURACJE, SA CIEKAWE, AWS MALY
+    # TODO SPRAWDZIC INNE KONFIGURACJE, SA CIEKAWE, AWS MALY
 
-    #AWS
+    # AWS
     aws_mem = section_on_property(results['aws'], 'fun_size')
     aws512 = sorted(aws_mem[512], key=lambda x: x['start'])[:threshold]
 
@@ -46,7 +48,7 @@ if __name__ == '__main__':
 
     print_stats('aws', aws_del)
 
-    #GCF
+    # GCF
     gcf_mem = section_on_property(results['gcf'], 'fun_size')
     gcf512 = sorted(gcf_mem[512], key=lambda x: x['start'])[:threshold]
 
@@ -55,7 +57,7 @@ if __name__ == '__main__':
 
     print_stats('gcf', gcf_del)
 
-    #IBM
+    # IBM
     ibm_mem = section_on_property(results['ibm'], 'fun_size')
     ibm512 = sorted(ibm_mem[512], key=lambda x: x['start'])[:threshold]
 
