@@ -100,7 +100,7 @@ if __name__ == '__main__':
     ax = plt.subplot(aws_c[1])
     ax.hist(aws_del_512, bins, alpha=0.5, edgecolor='k', label='512', color='C1')
     set_hist_params(ax)
-    ax.set_ylabel("count, log")
+    ax.set_ylabel("Count, log")
 
     ax = plt.subplot(aws_c[2])
     ax.hist(aws_del_1024, bins, alpha=0.5, edgecolor='k', label='1024', color='C2')
@@ -129,7 +129,7 @@ if __name__ == '__main__':
     ax = plt.subplot(gcf_c[1])
     ax.hist(gcf_del_512, bins, alpha=0.5, edgecolor='k', label='512', color='C1')
     set_hist_params(ax)
-    ax.set_ylabel("count, log")
+    ax.set_ylabel("Count, log")
 
     ax = plt.subplot(gcf_c[2])
     ax.hist(gcf_del_1024, bins, alpha=0.5, edgecolor='k', label='1024', color='C2')
@@ -152,7 +152,7 @@ if __name__ == '__main__':
     ax = plt.subplot(ibm_c[1])
     ax.hist(ibm_del_512, bins, alpha=0.5, edgecolor='k', label='512', color='C1')
     set_hist_params(ax)
-    ax.set_ylabel("count, log")
+    ax.set_ylabel("Count, log")
     ax.set_xlabel("Time [s]")
     ax.xaxis.set_ticks(np.arange(0, 300, 50))
 

@@ -80,7 +80,7 @@ if __name__ == '__main__':
     print_stats('ibm256', ibm_mem_256)
     print_stats('ibm512', ibm_mem_512)
 
-    bins = linspace(0, 50, 100)
+    bins = linspace(0, 50, 50)
 
     fig = plt.figure(figsize=(14, 7))
 
@@ -135,7 +135,7 @@ if __name__ == '__main__':
     ax1 = plt.subplot(gs_aws_l[1])
     ax1.hist(aws_mem_512, bins, alpha=0.5, edgecolor='k', label='512', color='C1')
     set_hist_params(ax1)
-    ax1.set_ylabel("count, log")
+    ax1.set_ylabel("Count, log")
 
     ax2 = plt.subplot(gs_aws_l[2])
     ax2.hist(aws_mem_1024, bins, alpha=0.5, edgecolor='k', label='1024', color='C2')
@@ -166,7 +166,7 @@ if __name__ == '__main__':
     ax1 = plt.subplot(gs_gcf_l[1])
     ax1.hist(gcf_mem_512, bins, alpha=0.5, edgecolor='k', label='512', color='C1')
     set_hist_params(ax1)
-    ax1.set_ylabel("count, log")
+    ax1.set_ylabel("Count, log")
 
     ax2 = plt.subplot(gs_gcf_l[2])
     ax2.hist(gcf_mem_1024, bins, alpha=0.5, edgecolor='k', label='1024', color='C2')
@@ -191,7 +191,7 @@ if __name__ == '__main__':
     set_hist_params(ax1)
     ax1.xaxis.set_ticks(arange(0, 55, 5))
     ax1.set_xlabel("Performance [GFlops]")
-    ax1.set_ylabel("count, log")
+    ax1.set_ylabel("Count, log")
 
     # plt.subplots_adjust(hspace=.0)
     fig.subplots_adjust(top=0.95)
