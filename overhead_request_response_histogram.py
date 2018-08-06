@@ -11,6 +11,11 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from linparser.read_logs import read_files, section_on_property, convert_to_list, convert_to_list_difference, \
     print_stats
 
+# PING TIMES
+# AWS: 23.622
+# GCF: 13.091 ms
+# IBM: 41.265
+
 
 def set_hist_params(ax):
     ax.set_yscale('log')
