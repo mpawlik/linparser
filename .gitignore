@@ -108,3 +108,7 @@ Pipfile.lock
 
 /inputs
 /results
+
+#outputs
+*png
+*pdf
