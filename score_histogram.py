@@ -8,7 +8,7 @@ from matplotlib import gridspec, ticker
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from linparser.read_logs import read_files, section_on_property, convert_to_list
+from linparser.read_logs import read_files, section_on_property, convert_to_list, print_stats
 
 providers = ['aws', 'gcf', 'ibm']
 
@@ -65,37 +65,20 @@ if __name__ == '__main__':
 
     # STATS
 
-    # AVG
-    print "aws_avg256: ", average(aws_mem_256)
-    print "aws_avg512: ", average(aws_mem_512)
-    print "aws_avg1024: ", average(aws_mem_1024)
-    print "aws_avg1536: ", average(aws_mem_1536)
-    print "aws_avg2048: ", average(aws_mem_2048)
-    print "aws_avg3008: ", average(aws_mem_3008)
+    print_stats('aws256', aws_mem_256)
+    print_stats('aws512', aws_mem_512)
+    print_stats('aws1024', aws_mem_1024)
+    print_stats('aws1536', aws_mem_1536)
+    print_stats('aws2048', aws_mem_2048)
+    print_stats('aws3008', aws_mem_3008)
 
-    print "gcf_avg256: ", average(gcf_mem_256)
-    print "gcf_avg512: ", average(gcf_mem_512)
-    print "gcf_avg1024: ", average(gcf_mem_1024)
-    print "gcf_avg2048: ", average(gcf_mem_2048)
+    print_stats('gcf256', gcf_mem_256)
+    print_stats('gcf512', gcf_mem_512)
+    print_stats('gcf1024', gcf_mem_1024)
+    print_stats('gcf2048', gcf_mem_2048)
 
-    print "ibm_avg256: ", average(ibm_mem_256)
-    print "ibm_avg512: ", average(ibm_mem_512)
-
-    # STD
-    print "aws_std256: ", std(aws_mem_256)
-    print "aws_std512: ", std(aws_mem_512)
-    print "aws_std1024: ", std(aws_mem_1024)
-    print "aws_std1536: ", std(aws_mem_1536)
-    print "aws_std2048: ", std(aws_mem_2048)
-    print "aws_std3008: ", std(aws_mem_3008)
-
-    print "gcf_std256: ", std(gcf_mem_256)
-    print "gcf_std512: ", std(gcf_mem_512)
-    print "gcf_std1024: ", std(gcf_mem_1024)
-    print "gcf_std2048: ", std(gcf_mem_2048)
-
-    print "ibm_std256: ", std(ibm_mem_256)
-    print "ibm_std512: ", std(ibm_mem_512)
+    print_stats('ibm256', ibm_mem_256)
+    print_stats('ibm512', ibm_mem_512)
 
     bins = linspace(0, 50, 100)
 
