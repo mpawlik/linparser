@@ -1,30 +1,29 @@
 import sys
-import json
 import os
 
 from numpy import arange
 import matplotlib.pyplot as plt
-from matplotlib import gridspec, ticker
+from matplotlib import gridspec
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from linparser.read_logs import read_files, section_on_property, convert_to_list, convert_to_list_difference
+from linparser.read_logs import read_files, section_on_property, convert_to_list, convert_to_list_difference, \
+    print_stats, div1k
 
-providers = ['aws', 'gcf', 'ibm']
 
-
-def set_params(ax):
+def chart_params(ax):
     ax.grid(alpha=0.3)
-    ax.set_ylim(0, 5200)
-    ax.set_xlim(0, 160)
+    ax.set_ylim(0, 5300)
+    ax.set_xlim(0, 170)
     ax.xaxis.set_ticks(arange(0, 160, 25))
-    ax.yaxis.set_ticks(arange(0, 5200, 500))
+    ax.yaxis.set_ticks(arange(1000, 5200, 1000))
+    ax.tick_params(axis='both', which='both', labelsize='small')
     ax.set_xlabel("Time [s]")
-    ax.set_ylabel("Task id")
+    ax.legend(loc='lower right', fontsize='x-small', )
 
 
-def divide(ran):
-    return [i / 1000. for i in ran]
+def first_chart(ax):
+    ax.yaxis.set_ticks(arange(0, 5200, 1000))
 
 
 def absolu(ran):
@@ -32,74 +31,100 @@ def absolu(ran):
     return [i - mi for i in ran]
 
 
+def gant(master_grid, place, start_data, duration_data, key):
+    ax = plt.subplot(master_grid[place])
+    count = len(start_data[key])
+    ax.barh(range(count), duration_data[key], [1] * count, start_data[key], align='edge', label='%d' % key,
+            color=['C%d' % place] * count)
+    chart_params(ax)
+    return ax
+
+
 if __name__ == '__main__':
     results = read_files(sys.argv[1:])
-    # for p in results.keys():
-    #     for r in results[p]:
-    #         print r['score'], r['duration']
 
-    threshold = 160
+    fig = plt.figure(figsize=(14, 10))
+    outer = gridspec.GridSpec(3, 1, wspace=0.2, hspace=0.4)
 
     # AWS
     aws_mem = section_on_property(results['aws'], 'fun_size')
 
-    aws_mem[512].sort(key=lambda r: r['start'])
-    aws_start = divide(convert_to_list(aws_mem[512], 'start'))
-    aws_duration = divide(convert_to_list(aws_mem[512], 'duration'))
+    aws_start = {}
+    aws_duration = {}
+    for mem in aws_mem.keys():
+        tmp = sorted(aws_mem[mem], key=lambda r: r['start'])
+        aws_start[mem] = div1k(convert_to_list(tmp, 'start'))
+        aws_duration[mem] = div1k(convert_to_list(tmp, 'duration'))
+        aws_start[mem] = absolu(aws_start[mem])
 
-    aws_start = absolu(aws_start)
-
-    print "max(aws_duration)", max(aws_duration)
-    print "max(aws_start)", max(aws_start)
-    print "aws_start after threshold", len(filter(lambda x: x > 160, aws_start))
+        print_stats('aws_start_%d' % mem, aws_start[mem])
+        print_stats('aws_duration_%d' % mem, aws_duration[mem])
+        print "aws_start_%d after threshold" % mem, len(filter(lambda x: x > 160, aws_start[mem]))
 
     # GCF
     gcf_mem = section_on_property(results['gcf'], 'fun_size')
 
-    gcf_mem[512].sort(key=lambda r: r['start'])
-    gcf_start = divide(convert_to_list(gcf_mem[512], 'start'))
-    gcf_duration = divide(convert_to_list(gcf_mem[512], 'duration'))
+    gcf_start = {}
+    gcf_duration = {}
+    for mem in gcf_mem.keys():
+        tmp = sorted(gcf_mem[mem], key=lambda r: r['start'])
+        gcf_start[mem] = div1k(convert_to_list(tmp, 'start'))
+        gcf_duration[mem] = div1k(convert_to_list(tmp, 'duration'))
+        gcf_start[mem] = absolu(gcf_start[mem])
 
-    gcf_start = absolu(gcf_start)
-
-    print "max(gcf_duration)", max(gcf_duration)
-    print "max(gcf_start)", max(gcf_start)
-    print "gcf_start after threshold", len(filter(lambda x: x > 160, gcf_start))
+        print_stats('gcf_start_%d' % mem, gcf_start[mem])
+        print_stats('gcf_duration_%d' % mem, gcf_duration[mem])
+        print "gcf_start_%d after threshold" % mem, len(filter(lambda x: x > 160, gcf_start[mem]))
 
     # IBM
     ibm_mem = section_on_property(results['ibm'], 'fun_size')
 
-    ibm_mem[512].sort(key=lambda r: r['start'])
-    ibm_start = divide(convert_to_list(ibm_mem[512], 'start'))
-    ibm_duration = divide(convert_to_list(ibm_mem[512], 'duration'))
+    ibm_start = {}
+    ibm_duration = {}
+    for mem in ibm_mem.keys():
+        tmp = sorted(ibm_mem[mem], key=lambda r: r['start'])
+        ibm_start[mem] = div1k(convert_to_list(tmp, 'start'))
+        ibm_duration[mem] = div1k(convert_to_list(tmp, 'duration'))
+        ibm_start[mem] = absolu(ibm_start[mem])
 
-    ibm_start = absolu(ibm_start)
+        print_stats('ibm_start_%d' % mem, ibm_start[mem])
+        print_stats('ibm_duration_%d' % mem, ibm_duration[mem])
+        print "ibm_start_%d after threshold" % mem, len(filter(lambda x: x > 160, ibm_start[mem]))
 
-    print "max(ibm512_duration)", max(ibm_duration)
-    print "max(ibm512_start)", max(ibm_start)
-    print "ibm_start after threshold", len(filter(lambda x: x > 125, ibm_start))
+    # CHARTS
 
-    fig = plt.figure(figsize=(10, 5))
+    aws_c = gridspec.GridSpecFromSubplotSpec(1, 6, subplot_spec=outer[0], wspace=0.)
+    gcf_c = gridspec.GridSpecFromSubplotSpec(1, 6, subplot_spec=outer[1], wspace=0.)
+    ibm_c = gridspec.GridSpecFromSubplotSpec(1, 6, subplot_spec=outer[2], wspace=0.)
 
-    gs = gridspec.GridSpec(1, 3, wspace=0.5)
+    ax = gant(aws_c, 5, aws_start, aws_duration, 3008)
+    ax = gant(aws_c, 4, aws_start, aws_duration, 2048)
+    ax = gant(aws_c, 3, aws_start, aws_duration, 1536)
+    ax = gant(aws_c, 2, aws_start, aws_duration, 1024)
+    ax = gant(aws_c, 1, aws_start, aws_duration, 512)
+    ax = gant(aws_c, 0, aws_start, aws_duration, 256)
+    first_chart(ax)
+    ax.set_ylabel("AWS\nTask id")
+    ax = gant(gcf_c, 4, gcf_start, gcf_duration, 2048)
+    ax = gant(gcf_c, 3, gcf_start, gcf_duration, 1024)
+    ax.set_ylabel("Task id")
+    ax = gant(gcf_c, 1, gcf_start, gcf_duration, 512)
+    ax = gant(gcf_c, 0, gcf_start, gcf_duration, 256)
+    first_chart(ax)
+    ax.set_ylabel("GCF\nTask id")
+    ax = gant(ibm_c, 1, ibm_start, ibm_duration, 512)
+    ax = gant(ibm_c, 0, ibm_start, ibm_duration, 256)
+    first_chart(ax)
+    ax.set_ylabel("IBM\nTask id")
 
-    ax = plt.subplot(gs[0])
-    aws_count = len(aws_start)
-    ax.barh(range(aws_count), aws_duration, [1] * aws_count, aws_start, align='edge', color=['C0'] * aws_count)
-    set_params(ax)
-    ax.set_title("AWS")
+    # ax = plt.subplot(gs[2])
+    # ibm_count = len(ibm_start)
+    # ax.barh(range(ibm_count), ibm_duration, [1] * ibm_count, ibm_start, align='edge', color=['C2'] * aws_count)
+    # set_params(ax)
+    # ax.set_title("IBM")
 
-    ax = plt.subplot(gs[1])
-    gcf_count = len(gcf_start)
-    ax.barh(range(gcf_count), gcf_duration, [1] * gcf_count, gcf_start, align='edge', color=['C1'] * aws_count)
-    set_params(ax)
-    ax.set_title("GCF")
-
-    ax = plt.subplot(gs[2])
-    ibm_count = len(ibm_start)
-    ax.barh(range(ibm_count), ibm_duration, [1] * ibm_count, ibm_start, align='edge', color=['C2'] * aws_count)
-    set_params(ax)
-    ax.set_title("IBM")
-
+    # plt.gcf().subplots_adjust(bottom=0.25)
+    # plt.gcf().subplots_adjust(top=0.25)
     plt.savefig('gantt.png', dpi=300)
+    plt.savefig('gantt.pdf')
     plt.show()
