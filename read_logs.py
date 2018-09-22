@@ -76,10 +76,10 @@ def section_on_property(results, key):
 
 
 def print_stats(prov, data):
-    print "max(%s): %f" % (prov, max(data))
-    print "min(%s): %f" % (prov, min(data))
-    print "avg(%s): %f" % (prov, average(data))
-    print "std(%s): %f" % (prov, std(data))
+    print "max(%s): %.2f" % (prov, max(data))
+    print "min(%s): %.2f" % (prov, min(data))
+    print "avg(%s): %.2f" % (prov, average(data))
+    print "std(%s): %.2f" % (prov, std(data))
     print "count(%s): %d" % (prov, len(data))
 
 
