@@ -14,13 +14,13 @@ def process(filename, provider):
                 print line
                 continue
             data = json.loads(line[6:])
-            if 'message' in data.keys():
-                print "Message: %s" % data['message']
-                continue
+            # if 'message' in data.keys():
+                # print "Message: %s" % data['message']
+                # continue
 
-            data['score'] = extract_performance(data['stdout'])
-            data['fun_size'] = extract_fun_size(data['executor_url'])
-            data['prob_size'] = extract_prob_size(data['args'])
+            # data['score'] = extract_performance(data['stdout'])
+            # data['fun_size'] = extract_fun_size(data['executor_url'])
+            # data['prob_size'] = extract_prob_size(data['args'])
             data['provider'] = provider
             out += [data]
     return out
@@ -35,29 +35,29 @@ def extract_performance(output):
     return -1
 
 
-def extract_fun_size(url):
-    suffix = url[-6:]
-    split_char = '-'
-    if '_' in suffix:
-        split_char = '_'
-    suffix = suffix.split(split_char)[1]
+# def extract_fun_size(url):
+#     suffix = url[-6:]
+#     split_char = '-'
+#     if '_' in suffix:
+#         split_char = '_'
+#     suffix = suffix.split(split_char)[1]
+#
+#     return int(suffix)
 
-    return int(suffix)
 
-
-def extract_prob_size(args):
-    size = int(args[1][9:].split('.')[0])
-    return size
+# def extract_prob_size(args):
+#     size = int(args[1][9:].split('.')[0])
+#     return size
 
 
 def div1k(data):
-    return [i / 1000. for i in data]
+    return [int(i) / 1000. for i in data]
 
 
 def read_files(files):
     read_results = {}
     for inp in files:
-        provider = os.path.basename(inp).split('_')[0]
+        provider = os.path.basename(inp).split('.')[0]
         read_results[provider] = process(inp, provider)
 
     return read_results
@@ -81,6 +81,19 @@ def print_stats(prov, data):
     print "avg(%s): %.2f" % (prov, average(data))
     print "std(%s): %.2f" % (prov, std(data))
     print "count(%s): %d" % (prov, len(data))
+
+def fix_long(raw_data):
+    for k in raw_data.keys():
+        data = raw_data[k]
+        adjust = 0
+        for d in data:
+            duration = int(d['duration'])
+            d['start'] = int(d['start']) - adjust
+            if duration > 7000:
+                print "Adjusting long execution for %s" % d['executable']
+                adjust += duration * 0.9
+                d['duration'] = duration * 0.1
+            d['end'] = int(d['end']) - adjust
 
 
 def convert_to_list(results, key):
