@@ -60,7 +60,7 @@ def gant(master_grid, place, start_data, duration_data, name, key):
 if __name__ == '__main__':
     results = read_files(sys.argv[1:])
 
-    fig = plt.figure(figsize=(7, 4))
+    fig = plt.figure(figsize=(10, 3))
     grid = gridspec.GridSpec(1, 2, wspace=0.4, hspace=0.1)
 
     fix_long(results)
@@ -91,7 +91,7 @@ if __name__ == '__main__':
     ax.set_title("Hybrid execution")
 
     # plt.gcf().subplots_adjust(right=0.95, left=0.07, top=0.96, bottom=0.07)
-    plt.gcf().subplots_adjust(top=0.90)
+    plt.gcf().subplots_adjust(left=0.07, top=0.90, right=0.95, bottom=0.16)
     plt.savefig('gantt.png', dpi=300)
     plt.savefig('gantt.pdf')
     plt.show()
