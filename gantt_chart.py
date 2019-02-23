@@ -13,10 +13,10 @@ from linparser.read_logs import read_files, section_on_property, convert_to_list
 
 def chart_params(ax):
     ax.grid(alpha=0.3)
-    ax.set_ylim(0, 45)
-    ax.set_xlim(0, 75)
-    ax.xaxis.set_ticks(arange(0, 100, 25))
-    ax.yaxis.set_ticks(arange(0, 50, 10))
+    ax.set_ylim(0, 1500)
+    ax.set_xlim(0, 1000)
+    # ax.xaxis.set_ticks(arange(0, 100, 25))
+    # ax.yaxis.set_ticks(arange(0, 50, 10))
     ax.tick_params(axis='both', which='both', labelsize='small')
     ax.set_ylabel("Task id")
     ax.set_xlabel("Time [s]")
@@ -47,11 +47,11 @@ def gant(master_grid, place, start_data, duration_data, name, key):
     present_types = []
     for i in range(count):
         if name[key][i] not in present_types:
-            ax.barh(i, duration_data[key][i], 1, start_data[key][i], align='edge', label=name[key][i],
+            ax.barh(i, duration_data[key][i], 10, start_data[key][i], align='edge', label=name[key][i],
                     color=color_map.get(name[key][i]))
             present_types += [name[key][i]]
         else:
-            ax.barh(i, duration_data[key][i], 1, start_data[key][i], align='edge',
+            ax.barh(i, duration_data[key][i], 10, start_data[key][i], align='edge',
                     color=color_map.get(name[key][i]))
     chart_params(ax)
     return ax
@@ -63,14 +63,15 @@ if __name__ == '__main__':
     fig = plt.figure(figsize=(10, 3))
     grid = gridspec.GridSpec(1, 2, wspace=0.4, hspace=0.1)
 
-    fix_long(results)
+    # fix_long(results)
 
     start = {}
     duration = {}
     end = {}
     name = {}
+    # for k in ['pure']:
     for k in ['pure', 'hybrid']:
-        # tmp = sorted(results[k], key=lambda r: r['start'])
+        tmp = sorted(results[k], key=lambda r: r['start'])
         tmp = results[k]
         start[k] = div1k(convert_to_list(tmp, 'start'))
         duration[k] = div1k(convert_to_list(tmp, 'duration'))
@@ -83,6 +84,9 @@ if __name__ == '__main__':
         print_stats('duration_%s' % k, duration[k])
         print_stats('end_%s' % k, end[k])
 
+    # for i in range(len(duration['hybrid'])):
+    #     print name['pure'][i], duration['hybrid'][i]
+
     # CHARTS
 
     ax = gant(grid, 0, start, duration, name, 'pure')
@@ -94,4 +98,4 @@ if __name__ == '__main__':
     plt.gcf().subplots_adjust(left=0.07, top=0.90, right=0.95, bottom=0.16)
     plt.savefig('gantt.png', dpi=300)
     plt.savefig('gantt.pdf')
-    plt.show()
+    # plt.show()
