@@ -46,13 +46,18 @@ def gant(master_grid, place, start_data, duration_data, name, key):
 
     present_types = []
     for i in range(count):
-        if name[key][i] not in present_types:
-            ax.barh(i, duration_data[key][i], 10, start_data[key][i], align='edge', label=name[key][i],
-                    color=color_map.get(name[key][i]))
-            present_types += [name[key][i]]
+        task_type = name[key][i]
+        if key == 'hybrid' and task_type in ['mProjectPP', 'mDiffFit', 'mBackground']:
+            task_label = '(lambda) %s' % task_type
+        else:
+            task_label = '(ecs) %s' % task_type
+        if task_type not in present_types:
+            ax.barh(i, duration_data[key][i], 10, start_data[key][i], align='edge', label=task_label,
+                    color=color_map.get(task_type))
+            present_types += [task_type]
         else:
             ax.barh(i, duration_data[key][i], 10, start_data[key][i], align='edge',
-                    color=color_map.get(name[key][i]))
+                    color=color_map.get(task_type))
     chart_params(ax)
     return ax
 
